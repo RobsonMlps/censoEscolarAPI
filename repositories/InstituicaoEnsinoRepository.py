@@ -1,10 +1,25 @@
-from sqlite3 import OperationalError
-
 from helpers.database import get_connection
 from models.instituicaoensino import InstituicaoEnsino
 
 
-class InstituicaoEnsinoRepository():
+class InstituicaoEnsinoRepository:
+    fields = (
+        "no_entidade",
+        "co_entidade",
+        "no_uf",
+        "sg_uf",
+        "co_uf",
+        "no_municipio",
+        "co_municipio",
+        "nu_ano_censo",
+        "qt_mat_bas",
+        "qt_mat_inf",
+        "qt_mat_fund",
+        "qt_mat_med",
+        "qt_mat_prof",
+        "qt_mat_eja",
+        "qt_mat_esp",
+    )
 
     @staticmethod
     def row_to_instituicao(row):
@@ -25,30 +40,76 @@ class InstituicaoEnsinoRepository():
             qt_mat_prof=row[13],
             qt_mat_eja=row[14],
             qt_mat_esp=row[15],
-            created=row[16]
+            created=row[16],
         )
 
-    def getInstituicoes(self, id):
-        pass
+    @staticmethod
+    def _active_filter():
+        return """
+            NOT EXISTS (
+                SELECT 1
+                FROM tb_instituicao_ensino_excluida AS excluida
+                WHERE excluida.id = escolas_nordeste_sudeste.rowid
+            )
+        """
 
-    def getInstituicao(self, id):
+    def get_instituicoes(self):
         connection = get_connection()
-        try:
-            cursor = connection.cursor()
-            cursor.execute("""
-                SELECT rowid, no_entidade, co_entidade, no_uf, sg_uf, co_uf, no_municipio, co_municipio, nu_ano_censo, qt_mat_bas, qt_mat_inf, qt_mat_fund, qt_mat_med, qt_mat_prof, qt_mat_eja, qt_mat_esp, NULL
-                FROM escolas_nordeste_sudeste
-                WHERE rowid = ?
-            """, (id,))
-            row = cursor.fetchone()
+        cursor = connection.execute(f"""
+            SELECT rowid, {", ".join(self.fields)}, NULL
+            FROM escolas_nordeste_sudeste
+            WHERE {self._active_filter()}
+            ORDER BY rowid
+        """)
+        return [self.row_to_instituicao(row) for row in cursor.fetchall()]
 
-            if row is None:
-                return None
+    def get_instituicao(self, id):
+        connection = get_connection()
+        row = connection.execute(f"""
+            SELECT rowid, {", ".join(self.fields)}, NULL
+            FROM escolas_nordeste_sudeste
+            WHERE rowid = ? AND {self._active_filter()}
+        """, (id,)).fetchone()
+        return self.row_to_instituicao(row) if row is not None else None
 
-            instituicao = self.row_to_instituicao(row)
+    def criar_instituicao(self, data):
+        connection = get_connection()
+        placeholders = ", ".join("?" for _ in self.fields)
+        cursor = connection.execute(
+            f"""
+                INSERT INTO escolas_nordeste_sudeste ({", ".join(self.fields)})
+                VALUES ({placeholders})
+            """,
+            tuple(data[field] for field in self.fields),
+        )
+        connection.commit()
+        return self.get_instituicao(cursor.lastrowid)
 
-        except OperationalError:
-            connection.rollback()
-            raise
+    def atualizar_instituicao(self, id, data):
+        connection = get_connection()
+        assignments = ", ".join(f"{field} = ?" for field in self.fields)
+        cursor = connection.execute(
+            f"""
+                UPDATE escolas_nordeste_sudeste
+                SET {assignments}
+                WHERE rowid = ? AND {self._active_filter()}
+            """,
+            (*[data[field] for field in self.fields], id),
+        )
+        if cursor.rowcount == 0:
+            return None
+        connection.commit()
+        return self.get_instituicao(id)
 
-        return instituicao
+    def excluir_instituicao(self, id):
+        connection = get_connection()
+        cursor = connection.execute(f"""
+            INSERT OR IGNORE INTO tb_instituicao_ensino_excluida (id)
+            SELECT rowid
+            FROM escolas_nordeste_sudeste
+            WHERE rowid = ? AND {self._active_filter()}
+        """, (id,))
+        if cursor.rowcount == 0:
+            return False
+        connection.commit()
+        return True

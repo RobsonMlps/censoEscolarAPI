@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS tb_instituicao_ensino (
+CREATE TABLE IF NOT EXISTS escolas_nordeste_sudeste (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     no_entidade TEXT NOT NULL,
     co_entidade TEXT NOT NULL,
@@ -14,6 +14,10 @@ CREATE TABLE IF NOT EXISTS tb_instituicao_ensino (
     qt_mat_med INTEGER NOT NULL CHECK (qt_mat_med >= 0),
     qt_mat_prof INTEGER NOT NULL CHECK (qt_mat_prof >= 0),
     qt_mat_eja INTEGER NOT NULL CHECK (qt_mat_eja >= 0),
-    qt_mat_esp INTEGER NOT NULL CHECK (qt_mat_esp >= 0),
-    created TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    qt_mat_esp INTEGER NOT NULL CHECK (qt_mat_esp >= 0)
+);
+
+CREATE TABLE IF NOT EXISTS tb_instituicao_ensino_excluida (
+    id INTEGER PRIMARY KEY,
+    deleted_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

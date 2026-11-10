@@ -1,35 +1,21 @@
-from helpers.database import get_connection
-from helpers.logger import logger
-
 from repositories.InstituicaoEnsinoRepository import InstituicaoEnsinoRepository
 
 
-class InstituicaoEnsinoService():
+class InstituicaoEnsinoService:
     def __init__(self):
         self.instituicaoEnsinoRepository = InstituicaoEnsinoRepository()
 
     def get_all(self):
-        connection = get_connection()
-        try:
-            logger.info("Recuperando a conexão com o Banco de dados")
-            cursor = connection.cursor()
-            cursor.execute("""
-            SELECT rowid, no_entidade, co_entidade, no_uf, sg_uf, co_uf, no_municipio, co_municipio, nu_ano_censo, qt_mat_bas, qt_mat_inf,
-                qt_mat_fund, qt_mat_med, qt_mat_prof, qt_mat_eja, qt_mat_esp, NULL
-            FROM escolas_nordeste_sudeste
-        """)
-            rows = cursor.fetchall()
-
-            instituicoes = [
-                InstituicaoEnsinoRepository.row_to_instituicao(row)
-                for row in rows
-            ]
-        except OperationalError:
-            logger.error("Erro no processamento dos dados no Banco de Dados")
-            connection.rollback()
-            raise
-
-        return instituicoes
+        return self.instituicaoEnsinoRepository.get_instituicoes()
 
     def get_by_id(self, id):
-        return self.instituicaoEnsinoRepository.getInstituicao(id)
+        return self.instituicaoEnsinoRepository.get_instituicao(id)
+
+    def create(self, data):
+        return self.instituicaoEnsinoRepository.criar_instituicao(data)
+
+    def update(self, id, data):
+        return self.instituicaoEnsinoRepository.atualizar_instituicao(id, data)
+
+    def delete(self, id):
+        return self.instituicaoEnsinoRepository.excluir_instituicao(id)
