@@ -6,6 +6,7 @@ from models.instituicaoensino import InstituicaoEnsino
 
 class InstituicaoEnsinoRepository():
 
+    @staticmethod
     def row_to_instituicao(row):
         return InstituicaoEnsino(
             id=row[0],
@@ -35,14 +36,14 @@ class InstituicaoEnsinoRepository():
         try:
             cursor = connection.cursor()
             cursor.execute("""
-                SELECT id, no_entidade, co_entidade, no_uf, sg_uf, co_uf, no_municipio, co_municipio, nu_ano_censo, qt_mat_bas, qt_mat_inf, qt_mat_fund, qt_mat_med, qt_mat_prof, qt_mat_eja, qt_mat_esp, created
-                FROM tb_instituicao_ensino
-                WHERE id = ?
+                SELECT rowid, no_entidade, co_entidade, no_uf, sg_uf, co_uf, no_municipio, co_municipio, nu_ano_censo, qt_mat_bas, qt_mat_inf, qt_mat_fund, qt_mat_med, qt_mat_prof, qt_mat_eja, qt_mat_esp, NULL
+                FROM escolas_nordeste_sudeste
+                WHERE rowid = ?
             """, (id,))
             row = cursor.fetchone()
 
             if row is None:
-                instituicao = None
+                return None
 
             instituicao = self.row_to_instituicao(row)
 
