@@ -1,4 +1,4 @@
-import sqlite3
+import psycopg2
 
 from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
@@ -31,7 +31,7 @@ def get_all_instituicoes():
     try:
         instituicoes = InstituicaoEnsinoService().get_all()
         return jsonify(instituicoesEnsinoSchema.dump(instituicoes)), 200
-    except sqlite3.Error:
+    except psycopg2.Error:
         logger.exception("Erro ao listar instituições de ensino")
         return {"erro": "Não foi possível consultar o banco de dados."}, 500
 
@@ -40,7 +40,7 @@ def get_all_instituicoes():
 def get_instituicao_by_id(id):
     try:
         instituicao = InstituicaoEnsinoService().get_by_id(id)
-    except sqlite3.Error:
+    except psycopg2.Error:
         logger.exception("Erro ao consultar instituição de ensino")
         return {"erro": "Não foi possível consultar o banco de dados."}, 500
 
@@ -57,7 +57,7 @@ def post_instituicao():
 
     try:
         instituicao = InstituicaoEnsinoService().create(data)
-    except sqlite3.Error:
+    except psycopg2.Error:
         logger.exception("Erro ao inserir instituição de ensino")
         return {"erro": "Não foi possível salvar no banco de dados."}, 500
 
@@ -72,7 +72,7 @@ def put_instituicao(id):
 
     try:
         instituicao = InstituicaoEnsinoService().update(id, data)
-    except sqlite3.Error:
+    except psycopg2.Error:
         logger.exception("Erro ao atualizar instituição de ensino")
         return {"erro": "Não foi possível atualizar no banco de dados."}, 500
 
@@ -85,7 +85,7 @@ def put_instituicao(id):
 def delete_instituicao(id):
     try:
         excluida = InstituicaoEnsinoService().delete(id)
-    except sqlite3.Error:
+    except psycopg2.Error:
         logger.exception("Erro ao excluir instituição de ensino")
         return {"erro": "Não foi possível excluir no banco de dados."}, 500
 

@@ -1,0 +1,90 @@
+2026-11-17 22:17:20,304 - ERROR - Erro ao listar instituições de ensino
+Traceback (most recent call last):
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/controllers/IntituicaoEnsinoController.py", line 32, in get_all_instituicoes
+    instituicoes = InstituicaoEnsinoService().get_all()
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/services/InstituicaoEnsinoService.py", line 9, in get_all
+    return self.instituicaoEnsinoRepository.get_instituicoes()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/repositories/InstituicaoEnsinoRepository.py", line 57, in get_instituicoes
+    connection = get_connection()
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/helpers/database/__init__.py", line 16, in get_connection
+    db = g._database = psycopg2.connect(
+                       ~~~~~~~~~~~~~~~~^
+        host="localhost",
+        ^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        port="5435"             # Porta mapeada no Docker
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/.venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (::1), port 5435 failed: FATAL:  database "/home/usuario/Área de trabalho/CensoEsoclarDataApp/dados/escol" does not exist
+
+2026-11-17 22:17:20,875 - ERROR - Erro ao listar instituições de ensino
+Traceback (most recent call last):
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/controllers/IntituicaoEnsinoController.py", line 32, in get_all_instituicoes
+    instituicoes = InstituicaoEnsinoService().get_all()
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/services/InstituicaoEnsinoService.py", line 9, in get_all
+    return self.instituicaoEnsinoRepository.get_instituicoes()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/repositories/InstituicaoEnsinoRepository.py", line 57, in get_instituicoes
+    connection = get_connection()
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/helpers/database/__init__.py", line 16, in get_connection
+    db = g._database = psycopg2.connect(
+                       ~~~~~~~~~~~~~~~~^
+        host="localhost",
+        ^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        port="5435"             # Porta mapeada no Docker
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/.venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (::1), port 5435 failed: FATAL:  database "/home/usuario/Área de trabalho/CensoEsoclarDataApp/dados/escol" does not exist
+
+2026-11-17 22:17:49,319 - ERROR - Erro ao listar instituições de ensino
+Traceback (most recent call last):
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/controllers/IntituicaoEnsinoController.py", line 32, in get_all_instituicoes
+    instituicoes = InstituicaoEnsinoService().get_all()
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/services/InstituicaoEnsinoService.py", line 9, in get_all
+    return self.instituicaoEnsinoRepository.get_instituicoes()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/repositories/InstituicaoEnsinoRepository.py", line 57, in get_instituicoes
+    connection = get_connection()
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/helpers/database/__init__.py", line 16, in get_connection
+    db = g._database = psycopg2.connect(
+                       ~~~~~~~~~~~~~~~~^
+        host="localhost",
+        ^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        port="5435"             # Porta mapeada no Docker
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/.venv/lib/python3.13/site-packages/psycopg2/__init__.py", line 122, in connect
+    conn = _connect(dsn, connection_factory=connection_factory, **kwasync)
+psycopg2.OperationalError: connection to server at "localhost" (::1), port 5435 failed: FATAL:  database "/home/usuario/Área de trabalho/CensoEsoclarDataApp/dados/escol" does not exist
+
+2026-11-17 22:18:53,222 - ERROR - Erro ao listar instituições de ensino
+Traceback (most recent call last):
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/controllers/IntituicaoEnsinoController.py", line 32, in get_all_instituicoes
+    instituicoes = InstituicaoEnsinoService().get_all()
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/services/InstituicaoEnsinoService.py", line 9, in get_all
+    return self.instituicaoEnsinoRepository.get_instituicoes()
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/usuario/Área de trabalho/CensoEscolarAPI/repositories/InstituicaoEnsinoRepository.py", line 59, in get_instituicoes
+    cursor.execute(f"""
+    ~~~~~~~~~~~~~~^^^^^
+        SELECT {", ".join(self.fields)}
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        ORDER BY co_entidade
+        ^^^^^^^^^^^^^^^^^^^^
+    """)
+    ^^^^
+psycopg2.errors.UndefinedTable: relation "tb_instituicao_ensino_excluida" does not exist
+LINE 7:                 FROM tb_instituicao_ensino_excluida AS exclu...
+                             ^
+
